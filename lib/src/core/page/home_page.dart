@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:number_to_word/src/constant/app_text_style.dart';
 import 'package:number_to_word/src/core/core.dart';
 
 class HomePage extends StatefulWidget {
@@ -54,9 +55,26 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           const SizedBox(height: 32.0),
-          CustomTextFormField(
+          const CustomTextFormField(
             title: 'Output',
             readOnly: true,
+          ),
+          const SizedBox(height: 32.0),
+          ElevatedButton(
+            onPressed: () {
+              final bool isValid = _numberToWordFormKey.currentState!.validate();
+              if (!isValid) {
+                return;
+              }
+
+            },
+            style: ElevatedButton.styleFrom(
+              shape: const RoundedRectangleBorder(
+                side: BorderSide(),
+              ),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text('Convert', style: AppTextStyle.black_400_14),
           ),
         ],
       ),
