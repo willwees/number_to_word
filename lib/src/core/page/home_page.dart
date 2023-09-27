@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:number_to_word/src/core/core.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage();
@@ -8,13 +9,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  final GlobalKey<FormState> _numberToWordFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -23,25 +18,48 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Converter app'),
       ),
-      body: Center(
+      body: _buildContent(),
+    );
+  }
+
+  Widget _buildContent() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'Please enter an integer number in the "input" box and tap on "Convert" to see the equivalent in words appear in the "Output" box',
+              textAlign: TextAlign.justify,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            const SizedBox(height: 32.0),
+            _buildNumberToWordForm(),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget _buildNumberToWordForm() {
+    return Form(
+      key: _numberToWordFormKey,
+      child: Column(
+        children: <Widget>[
+          CustomTextFormField(
+            title: 'Input',
+            readOnly: false,
+            onChanged: (String value) {
+              _numberToWordFormKey.currentState!.validate();
+            },
+          ),
+          const SizedBox(height: 32.0),
+          CustomTextFormField(
+            title: 'Output',
+            readOnly: true,
+          ),
+        ],
+      ),
     );
   }
 }
