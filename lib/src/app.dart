@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:number_to_word/src/core/core.dart';
 
 class App extends StatelessWidget {
@@ -12,7 +13,10 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: BlocProvider<HomeBloc>(
+        create: (BuildContext context) => HomeBloc(),
+        child: const HomePage(),
+      ),
     );
   }
 }

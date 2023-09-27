@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:number_to_word/src/constant/app_text_style.dart';
 import 'package:number_to_word/src/core/core.dart';
 
@@ -51,7 +52,12 @@ class _HomePageState extends State<HomePage> {
             title: 'Input',
             readOnly: false,
             onChanged: (String value) {
-              _numberToWordFormKey.currentState!.validate();
+              final bool isValid = _numberToWordFormKey.currentState!.validate();
+              if (!isValid) {
+                return;
+              }
+
+              context.read<HomeBloc>().add(HomeUpdateInputNumberEvent(value: value));
             },
           ),
           const SizedBox(height: 32.0),
@@ -67,6 +73,7 @@ class _HomePageState extends State<HomePage> {
                 return;
               }
 
+              context.read<HomeBloc>().add(HomeConvertNumberEvent());
             },
             style: ElevatedButton.styleFrom(
               shape: const RoundedRectangleBorder(
