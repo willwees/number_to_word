@@ -45,14 +45,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             ),
             errorStyle: const TextStyle(height: 0.0),
             suffixIcon: _errorMessage.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.info),
-                    color: Colors.red,
-                    onPressed: () {
-                      //TODO: tooltip
-                      print(_errorMessage);
-                    },
-                  )
+                ? _buildSuffixIcon()
                 : null,
           ),
         ),
@@ -73,5 +66,22 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
     _errorMessage = '';
     return null;
+  }
+
+  Widget _buildSuffixIcon() {
+    return Tooltip(
+      message: _errorMessage,
+      preferBelow: false,
+      triggerMode: TooltipTriggerMode.tap,
+      showDuration: const Duration(seconds: 5),
+      decoration: const BoxDecoration(
+        color: Colors.red,
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+      ),
+      child: const Icon(
+        Icons.info,
+        color: Colors.red,
+      ),
+    );
   }
 }
