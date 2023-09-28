@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:number_to_word/src/constant/app_text_style.dart';
 
 class CustomTextFormField extends StatefulWidget {
+  final TextEditingController? controller;
   final String title;
   final bool readOnly;
+  final int? maxLines;
   final Function(String)? onChanged;
 
   const CustomTextFormField({
     super.key,
+    this.controller,
     required this.title,
     required this.readOnly,
+    this.maxLines = 1,
     this.onChanged,
   });
 
@@ -28,8 +32,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         Text(widget.title),
         const SizedBox(height: 8.0),
         TextFormField(
+          controller: widget.controller,
           style: AppTextStyle.black_400_14,
           readOnly: widget.readOnly,
+          maxLines: widget.maxLines,
           validator: widget.readOnly ? null : _textFieldNumberValidator,
           onChanged: (String value) {
             setState(() {

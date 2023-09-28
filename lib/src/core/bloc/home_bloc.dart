@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:number_to_word/src/utils/number_to_word_helper.dart';
+import 'package:number_to_word/src/utils/string_helper.dart';
 
 part 'home_event.dart';
 
@@ -22,6 +24,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   void _convertNumber(HomeConvertNumberEvent event, Emitter<HomeState> emit) {
-    // TODO: implement event handler
+    if (state.inputNumber == null) {
+      return;
+    }
+
+    final String convertResult = NumberToWordHelper.convertNumberToWord(state.inputNumber!).capitalizeFirstLetter;
+
+    emit(
+      state.copyWith(
+        convertResult: convertResult,
+      ),
+    );
   }
 }

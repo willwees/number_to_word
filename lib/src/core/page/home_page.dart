@@ -12,15 +12,29 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<FormState> _numberToWordFormKey = GlobalKey<FormState>();
+  final TextEditingController _outputTextEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    _outputTextEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Converter app'),
+    return BlocListener<HomeBloc, HomeState>(
+      listenWhen: (HomeState previous, HomeState current) => previous.convertResult != current.convertResult,
+      listener: (BuildContext context, HomeState state) {
+        // update output text
+        _outputTextEditingController.text = state.convertResult;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text('Converter app'),
+        ),
+        body: _buildContent(),
       ),
-      body: _buildContent(),
     );
   }
 
@@ -61,9 +75,11 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           const SizedBox(height: 32.0),
-          const CustomTextFormField(
+          CustomTextFormField(
+            controller: _outputTextEditingController,
             title: 'Output',
             readOnly: true,
+            maxLines: 4,
           ),
           const SizedBox(height: 32.0),
           ElevatedButton(
