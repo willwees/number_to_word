@@ -58,14 +58,17 @@ class NumberToWordHelper {
       if (remainder < 20) {
         result = '${_numberWordList[remainder]} ${_thousandsWordList[thousandsIndex]} $result';
       } else if (remainder < 100) {
-        result = '${_tensWordList[remainder ~/ 10]}-${_numberWordList[remainder % 10]} ${_thousandsWordList[thousandsIndex]} $result';
+        result =
+            '${_tensWordList[remainder ~/ 10]}-${_numberWordList[remainder % 10]} ${_thousandsWordList[thousandsIndex]} $result';
       } else {
-        if (remainder % 100 == 0) {
-          result = '${_numberWordList[remainder ~/ 100]} hundred ${_thousandsWordList[thousandsIndex]} $result';
-        } else {
-          result =
-              '${_numberWordList[remainder ~/ 100]} hundred ${_tensWordList[remainder % 100 ~/ 10]}-${_numberWordList[remainder % 10]} ${_thousandsWordList[thousandsIndex]} $result';
+        String tensWord = '';
+
+        // check if there is tens word
+        if (remainder % 100 != 0) {
+          tensWord = '${_tensWordList[remainder % 100 ~/ 10]}-${_numberWordList[remainder % 10]} ';
         }
+
+        result = '${_numberWordList[remainder ~/ 100]} hundred $tensWord${_thousandsWordList[thousandsIndex]} $result';
       }
 
       testedNumber = testedNumber ~/ 1000;
