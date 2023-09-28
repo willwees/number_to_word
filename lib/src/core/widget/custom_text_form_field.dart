@@ -70,7 +70,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       return '';
     }
 
+    // reset tooltip state and clear error message
+    _showErrorTooltip = false;
     _errorMessage = '';
+
     return null;
   }
 
