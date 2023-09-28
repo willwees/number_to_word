@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:number_to_word/src/constant/app_text_style.dart';
+import 'package:number_to_word/src/core/core.dart';
 
 class CustomTextFormField extends StatefulWidget {
   final TextEditingController? controller;
@@ -23,6 +24,7 @@ class CustomTextFormField extends StatefulWidget {
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
   String _errorMessage = '';
+  bool _showErrorTooltip = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +52,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               borderSide: BorderSide(color: Colors.red),
             ),
             errorStyle: const TextStyle(height: 0.0),
-            suffixIcon: _errorMessage.isNotEmpty
-                ? _buildSuffixIcon()
-                : null,
+            suffixIcon: _errorMessage.isNotEmpty ? _buildSuffixIcon() : null,
           ),
         ),
       ],
@@ -75,18 +75,37 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   }
 
   Widget _buildSuffixIcon() {
-    return Tooltip(
-      message: _errorMessage,
-      preferBelow: false,
-      triggerMode: TooltipTriggerMode.tap,
-      showDuration: const Duration(seconds: 5),
-      decoration: const BoxDecoration(
-        color: Colors.red,
-        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _showErrorTooltip = !_showErrorTooltip;
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Stack(
+          alignment: Alignment.centerRight,
+          children: <Widget>[
+            if (_showErrorTooltip) _buildTooltip(),
+            const Icon(
+              Icons.info,
+              color: Colors.red,
+            ),
+          ],
+        ),
       ),
-      child: const Icon(
-        Icons.info,
-        color: Colors.red,
+    );
+  }
+
+  Widget _buildTooltip() {
+    return Transform.translate(
+      offset: const Offset(0.0, -40.0),
+      child: CustomPaint(
+        painter: CustomTooltipPainter(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+          child: Text(_errorMessage, style: AppTextStyle.white_400_14),
+        ),
       ),
     );
   }
