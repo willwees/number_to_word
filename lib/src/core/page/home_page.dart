@@ -28,12 +28,19 @@ class _HomePageState extends State<HomePage> {
         // update output text
         _outputTextEditingController.text = state.convertResult;
       },
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text('Converter app'),
+      child: GestureDetector(
+        onTap: () {
+          // dismiss keyboard
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: const Text('Converter app'),
+          ),
+          body: _buildContent(),
+          resizeToAvoidBottomInset: false,
         ),
-        body: _buildContent(),
       ),
     );
   }
@@ -41,65 +48,66 @@ class _HomePageState extends State<HomePage> {
   Widget _buildContent() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const Text(
-              'Please enter an integer number in the "input" box and tap on "Convert" to see the equivalent in words appear in the "Output" box',
-              textAlign: TextAlign.justify,
-            ),
-            const SizedBox(height: 32.0),
-            _buildNumberToWordForm(),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Text(
+            'Please enter an integer number in the "input" box and tap on "Convert" to see the equivalent in words appear in the "Output" box',
+            textAlign: TextAlign.justify,
+          ),
+          const SizedBox(height: 32.0),
+          _buildNumberToWordForm(),
+        ],
       ),
     );
   }
 
   Widget _buildNumberToWordForm() {
-    return Form(
-      key: _numberToWordFormKey,
-      child: Column(
-        children: <Widget>[
-          CustomTextFormField(
-            title: 'Input',
-            readOnly: false,
-            onChanged: (String value) {
-              final bool isValid = _numberToWordFormKey.currentState!.validate();
-              if (!isValid) {
-                return;
-              }
+    return Expanded(
+      child: Form(
+        key: _numberToWordFormKey,
+        child: Column(
+          children: <Widget>[
+            CustomTextFormField(
+              title: 'Input',
+              readOnly: false,
+              onChanged: (String value) {
+                final bool isValid = _numberToWordFormKey.currentState!.validate();
+                if (!isValid) {
+                  return;
+                }
 
-              context.read<HomeBloc>().add(HomeUpdateInputNumberEvent(value: value));
-            },
-          ),
-          const SizedBox(height: 32.0),
-          CustomTextFormField(
-            controller: _outputTextEditingController,
-            title: 'Output',
-            readOnly: true,
-            maxLines: 4,
-          ),
-          const SizedBox(height: 32.0),
-          ElevatedButton(
-            onPressed: () {
-              final bool isValid = _numberToWordFormKey.currentState!.validate();
-              if (!isValid) {
-                return;
-              }
-
-              context.read<HomeBloc>().add(HomeConvertNumberEvent());
-            },
-            style: ElevatedButton.styleFrom(
-              shape: const RoundedRectangleBorder(
-                side: BorderSide(),
-              ),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                context.read<HomeBloc>().add(HomeUpdateInputNumberEvent(value: value));
+              },
             ),
-            child: Text('Convert', style: AppTextStyle.black_400_14),
-          ),
-        ],
+            const SizedBox(height: 32.0),
+            CustomTextFormField(
+              controller: _outputTextEditingController,
+              title: 'Output',
+              readOnly: true,
+              maxLines: 4,
+            ),
+            const Spacer(),
+            ElevatedButton(
+              onPressed: () {
+                final bool isValid = _numberToWordFormKey.currentState!.validate();
+                if (!isValid) {
+                  return;
+                }
+
+                context.read<HomeBloc>().add(HomeConvertNumberEvent());
+              },
+              style: ElevatedButton.styleFrom(
+                shape: const RoundedRectangleBorder(
+                  side: BorderSide(),
+                ),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text('Convert', style: AppTextStyle.black_400_14),
+            ),
+            const SizedBox(height: 56.0),
+          ],
+        ),
       ),
     );
   }
